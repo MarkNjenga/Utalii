@@ -12,26 +12,12 @@ class User(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
 
-    phone_number = db.Column(db.String, nullable=False, unique=True)  # Changed to String
-
-    phone_number = db.Column(db.Integer, nullable=False, unique=True)
+    phone_number = db.Column(db.String, nullable=False, unique=True) 
 
     password = db.Column(db.String, nullable=False)
     destinations = db.relationship('Destination', backref='user')
     services = db.relationship('Service', backref='user')
     serialize_rules = ('-destinations.user', '-services.user')
-
-class DestinationService(db.Model, SerializerMixin):
-    __tablename__ = 'destination_service'
-
-    id = db.Column(db.Integer, primary_key=True)
-    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'))
-    service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
-    rating = db.Column(db.Integer, nullable=False) 
-
-    destination = db.relationship('Destination', backref='destination_services')
-    service = db.relationship('Service', backref='destination_services')
-    serialize_rules = ('-destination.destination_services', '-service.destination_services')
 
 class Destination(db.Model, SerializerMixin):
     __tablename__ = 'destinations'
@@ -43,8 +29,21 @@ class Destination(db.Model, SerializerMixin):
     category = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     services = db.relationship('Service', secondary='destination_service', viewonly=True)
-    destination_services = db.relationship('DestinationService', backref='destination')
+    destination_services = db.relationship('DestinationService', backref='destination_link') 
     serialize_rules = ('-services.user', '-destination_services.service')
+
+
+class DestinationService(db.Model, SerializerMixin):
+    __tablename__ = 'destination_service'
+
+    id = db.Column(db.Integer, primary_key=True)
+    destination_id = db.Column(db.Integer, db.ForeignKey('destinations.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
+    rating = db.Column(db.Integer, nullable=False) 
+
+    destination = db.relationship("Destination", backref="_destination_services")  
+    service = db.relationship("Service", backref="destination_service_list")  
+    serialize_rules = ('-destination.services_link', '-service.destination_services')
 
 
 class Service(db.Model, SerializerMixin):
@@ -56,9 +55,5 @@ class Service(db.Model, SerializerMixin):
     description = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     destinations = db.relationship('Destination', secondary='destination_service', viewonly=True)
-    destination_services = db.relationship('DestinationService', backref='service')
-
+    destination_services = db.relationship('DestinationService', backref='service_link')  
     serialize_rules = ('-destinations.user', '-destination_services.destination')
-
-    serialize_rules = ('-destinations.user', '-destination_services.destination')
-
