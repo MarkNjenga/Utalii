@@ -11,7 +11,11 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
+
     phone_number = db.Column(db.String, nullable=False, unique=True)  # Changed to String
+
+    phone_number = db.Column(db.Integer, nullable=False, unique=True)
+
     password = db.Column(db.String, nullable=False)
     destinations = db.relationship('Destination', backref='user')
     services = db.relationship('Service', backref='user')
@@ -42,6 +46,7 @@ class Destination(db.Model, SerializerMixin):
     destination_services = db.relationship('DestinationService', backref='destination')
     serialize_rules = ('-services.user', '-destination_services.service')
 
+
 class Service(db.Model, SerializerMixin):
     __tablename__ = 'services'
 
@@ -52,4 +57,8 @@ class Service(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     destinations = db.relationship('Destination', secondary='destination_service', viewonly=True)
     destination_services = db.relationship('DestinationService', backref='service')
+
     serialize_rules = ('-destinations.user', '-destination_services.destination')
+
+    serialize_rules = ('-destinations.user', '-destination_services.destination')
+
