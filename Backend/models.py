@@ -23,6 +23,8 @@ class Destination(db.Model, SerializerMixin):
     __tablename__ = 'destinations'
 
     id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String, nullable=False)
     price = db.Column(db.Float, nullable=False)
     image = db.Column(db.String, nullable=False)
