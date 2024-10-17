@@ -59,3 +59,56 @@ class Service(db.Model, SerializerMixin):
     destinations = db.relationship('Destination', secondary='destination_service', viewonly=True)
     destination_services = db.relationship('DestinationService', backref='service_link')  
     serialize_rules = ('-destinations.user', '-destination_services.destination')
+
+hotel_park = db.Table('hotel_park',
+    db.Column('hotel_id', db.Integer, db.ForeignKey('hotels.id'), primary_key=True),
+    db.Column('park_id', db.Integer, db.ForeignKey('parks.id'), primary_key=True)
+)
+
+hotel_beach = db.Table('hotel_beach',
+    db.Column('hotel_id', db.Integer, db.ForeignKey('hotels.id'), primary_key=True),
+    db.Column('beach_id', db.Integer, db.ForeignKey('beaches.id'), primary_key=True)
+)
+
+# Location Model
+class Location(db.Model):
+    __tablename__ = 'locations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    
+    parks = db.relationship('Park', backref='location', lazy=True)
+    hotels = db.relationship('Hotel', backref='location', lazy=True)
+    beaches = db.relationship('Beach', backref='location', lazy=True)
+
+# Park Model
+class Park(db.Model):
+    __tablename__ = 'parks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))  # Foreign key to Location
+
+    hotels = db.relationship('Hotel', secondary=hotel_park, backref='linked_parks')  # Renamed backref to 'linked_parks'
+    beaches = db.relationship('Beach', backref='park')
+
+# Hotel Model
+class Hotel(db.Model):
+    __tablename__ = 'hotels'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))  # Foreign key to Location
+
+    beaches = db.relationship('Beach', secondary=hotel_beach, backref='linked_hotels')  # Renamed backref to 'linked_hotels'
+
+# Beach Model
+class Beach(db.Model):
+    __tablename__ = 'beaches'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))  # Foreign key to Location
+    park_id = db.Column(db.Integer, db.ForeignKey('parks.id'))  # Foreign key to Park
+
+    hotels = db.relationship('Hotel', secondary=hotel_beach, backref='linked_beaches')
