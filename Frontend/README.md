@@ -1,11 +1,13 @@
 # Kenya Tours
 
 ## Author
+
 Sera Shani 
 Mark Wanjiku
 Brenda Akinyi 
 Lemachi James Pascal
 Trevor Nicholas 
+
 
 
 ## Description

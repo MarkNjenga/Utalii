@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
-from models import db, User, Destination
+from models import db, User, Destination, Hotel, Park, Beach
 
 app = Flask(__name__)
 CORS(app)
@@ -73,7 +73,7 @@ class ProtectedResource(Resource):
 class Hotels(Resource):
     def get(self):
         hotels = []
-        hotels_dict = [h.to_dict() for h in Destination.query.filter_by(Destination.category=='hotel').all()]
+        hotels_dict = [h.to_dict() for h in Hotel.query.all()]
         hotels.append(hotels_dict)
         response = make_response(
             hotels,
@@ -83,7 +83,7 @@ class Hotels(Resource):
 class Parks(db.Model, Resource):
     def get(self):
         parks = []
-        parks_dict = [p.to_dict() for p in Destination.query.filter_by(Destination.category=='park').all()]
+        parks_dict = [p.to_dict() for p in Park.query.all()]
         parks.append(parks_dict)
         response = make_response(
             parks,
@@ -94,7 +94,7 @@ class Parks(db.Model, Resource):
 class Beaches(db.Model, Resource):
     def get(self):
         beaches = []
-        beaches_dict = [b for b in Destination.query.filter_by(Destination.category=='beach').all()]
+        beaches_dict = [b for b in Beach.query.all()]
         beaches.append(beaches_dict)
         response = make_response(
             beaches,
