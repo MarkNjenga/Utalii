@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
+import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
+
 
 const AddServicePage = () => {
   const [service, setService] = useState({
@@ -12,6 +13,11 @@ const AddServicePage = () => {
     imageUrl: "",
     category: "parks", // Default category
   });
+
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
   const [formVisible, setFormVisible] = useState(false);
   const [services, setServices] = useState([]);
   const [editingServiceId, setEditingServiceId] = useState(null);
@@ -55,7 +61,11 @@ const AddServicePage = () => {
     })
       .then((response) => response.json())
       .then(() => {
+
+        toast.success("Service added successfully!"); // Toast notification
+
         toast.success(editingServiceId ? "Service updated successfully!" : "Service added successfully!");
+
         setService({
           name: "",
           description: "",
@@ -63,6 +73,17 @@ const AddServicePage = () => {
           imageUrl: "",
           category: "parks",
         });
+
+        navigate(`/${category}`);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setModalMessage("Error adding service. Please try again.");
+        setModalIsOpen(true);
+      });
+  };
+
+
         setEditingServiceId(null);
         fetchServices(); // Refresh the service list
         setFormVisible(false); // Hide the form after submission
@@ -94,17 +115,21 @@ const AddServicePage = () => {
       });
   };
 
+
   return (
     <div>
       <NavBar />
       <Outlet />
-
       <h2>Add New Service</h2>
       <button
+
+        onClick={() => setFormVisible(true)}
+
         onClick={() => {
           setFormVisible(true);
           setEditingServiceId(null); // Reset editing state
         }}
+
         style={{
           backgroundColor: "#007BFF",
           color: "white",
@@ -227,7 +252,7 @@ const AddServicePage = () => {
                 borderRadius: "4px",
                 cursor: "pointer",
                 transition: "background-color 0.3s",
-                marginBottom: "10px", // Add margin for spacing
+                marginBottom: "10px",
               }}
             >
               Submit Service
@@ -250,6 +275,8 @@ const AddServicePage = () => {
         </div>
       )}
 
+      <ToastContainer /> {/* Toast container for notifications */}
+
       <h3>Services List</h3>
       <ul style={{ listStyleType: "none", padding: 0 }}>
         {services.map((service) => (
@@ -267,6 +294,7 @@ const AddServicePage = () => {
       </ul>
 
       <ToastContainer />
+
     </div>
   );
 };

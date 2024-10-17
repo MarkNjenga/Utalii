@@ -1,5 +1,5 @@
 import NavBar from "./NavBar"
-import { Outlet} from "react-router-dom"
+import { Outlet } from "react-router-dom"
 
 
 function Home() {
@@ -23,7 +23,7 @@ function Home() {
 
       <section className="container">
         <div className="image-container">
-          <img src="https://images.unsplash.com/photo-1683561383748-28febc1066d4?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="lion" />
+          <img src="/Frontend/src/images/images.jpeg" alt="lion" />
           <h3> National Park</h3>
           <p>Wildlife: Rich in diverse species including cheetahs, giraffes, hippos, and numerous bird species.</p>
 
