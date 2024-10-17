@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './signup.css'; // Import the CSS
 
 const Signup = () => {
@@ -22,6 +23,21 @@ const Signup = () => {
     alert('Account created successfully!');
     navigate('/login'); // Redirect to login page
   };
+  const notify = () => {
+    toast.success(`Sign-up confirmed.`, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      onClose: () => navigate('/login'),
+    });
+  }
+  
+  
 
   return (
     <div className="signup-container">
@@ -63,7 +79,19 @@ const Signup = () => {
             required
           />
         </div>
-        <button type="submit">Sign Up</button>
+        <button type="submit" onClick={() => notify()}>Sign Up</button>
+        <ToastContainer 
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"                                        
+        />
       </form>
       
     </div>
