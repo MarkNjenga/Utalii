@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import NavBar from "../components/NavBar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const AddServicePage = () => {
   const [service, setService] = useState({
@@ -12,6 +10,9 @@ const AddServicePage = () => {
     imageUrl: "",
     category: "parks", // Default category
   });
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const [formVisible, setFormVisible] = useState(false);
   const navigate = useNavigate();
@@ -34,7 +35,9 @@ const AddServicePage = () => {
     })
       .then((response) => response.json())
       .then(() => {
+
         toast.success("Service added successfully!"); // Toast notification
+
         setService({
           name: "",
           description: "",
@@ -47,8 +50,74 @@ const AddServicePage = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error adding service. Please try again."); // Toast notification
+
+        setModalMessage("Error adding service. Please try again.");
+        setModalIsOpen(true);
+
       });
+  };
+
+  const modalStyle = {
+    display: modalIsOpen ? "flex" : "none",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  };
+
+  const modalContentStyle = {
+    backgroundColor: "white",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+    textAlign: "center",
+    maxWidth: "400px",
+    width: "90%",
+  };
+
+  // Inline styles for the form and button
+  const formStyle = {
+    display: "flex",
+    flexDirection: "column",
+    maxWidth: "400px",
+    margin: "20px auto",
+    padding: "20px",
+    border: "1px solid #007BFF",
+    borderRadius: "8px",
+    backgroundColor: "#f8f9fa",
+  };
+
+  const inputStyle = {
+    marginBottom: "15px",
+    padding: "10px",
+    borderRadius: "4px",
+    border: "1px solid #007BFF",
+    outline: "none",
+  };
+
+  const buttonStyle = {
+    backgroundColor: "#007BFF",
+    color: "white",
+    padding: "10px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+  };
+
+  const closeButtonStyle = {
+    backgroundColor: "#007BFF",
+    color: "white",
+    padding: "10px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    marginTop: "10px",
   };
 
   return (
@@ -58,17 +127,10 @@ const AddServicePage = () => {
 
       <h2>Add New Service</h2>
       <button
-        onClick={() => {
-          setFormVisible(true);
-        }}
-        style={{
-          backgroundColor: "#007BFF",
-          color: "white",
-          padding: "10px",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
+
+        onClick={() => setFormVisible(true)}
+        style={{ backgroundColor: "#007BFF", color: "white", padding: "10px", border: "none", borderRadius: "4px", cursor: "pointer" }}
+
       >
         Add Service
       </button>
@@ -207,6 +269,7 @@ const AddServicePage = () => {
       )}
 
       <ToastContainer />
+
     </div>
   );
 };
