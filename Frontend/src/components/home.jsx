@@ -23,7 +23,7 @@ function Home() {
 
       <section className="container">
         <div className="image-container">
-          <img src="https://images.unsplash.com/photo-1683561383748-28febc1066d4?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="lion" />
+          <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.eastafricasafaristours.com%2Ftsavo-east-national-park%2F&psig=AOvVaw1py0B354_74RxK5uioF-qQ&ust=1729169632588000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPDWqP_4kokDFQAAAAAdAAAAABAS" alt="lion" />
           <h3> National Park</h3>
           <p>Wildlife: Rich in diverse species including cheetahs, giraffes, hippos, and numerous bird species.</p>
 
