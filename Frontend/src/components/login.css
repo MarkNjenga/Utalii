@@ -1,4 +1,16 @@
-/* styles.css */
+.login-container {
+  margin: auto; /* Center vertically and horizontally */
+  padding: 20px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Center the text inside the form */
+  width: 300px; /* Optional: set a fixed width */
+  position: center; /* Position relative for stacking context */
+  top: 50%; /* Adjust from top */
+  transform: translateY(-50%);
+}
+
 button {
     padding: 10px 20px;
     font-size: 16px;
@@ -19,3 +31,6 @@ button {
     background-color: #004080;
   }
   
+  .signup-link{
+    margin-top: 0px;
+  }
