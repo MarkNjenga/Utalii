@@ -13,6 +13,7 @@ const AddServicePage = () => {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
   const [formVisible, setFormVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -34,8 +35,8 @@ const AddServicePage = () => {
     })
       .then((response) => response.json())
       .then(() => {
-        setModalMessage("Service added successfully");
-        setModalIsOpen(true);
+
+        toast.success("Service added successfully!"); // Toast notification
 
         setService({
           name: "",
@@ -49,8 +50,10 @@ const AddServicePage = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
+
         setModalMessage("Error adding service. Please try again.");
         setModalIsOpen(true);
+
       });
   };
 
@@ -124,80 +127,149 @@ const AddServicePage = () => {
 
       <h2>Add New Service</h2>
       <button
+
         onClick={() => setFormVisible(true)}
         style={{ backgroundColor: "#007BFF", color: "white", padding: "10px", border: "none", borderRadius: "4px", cursor: "pointer" }}
+
       >
         Add Service
       </button>
 
       {formVisible && (
-        <form onSubmit={handleSubmit} style={formStyle}>
-          <label>
-            Service Name:
-            <input
-              type="text"
-              name="name"
-              value={service.name}
-              onChange={handleChange}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Description:
-            <textarea
-              name="description"
-              value={service.description}
-              onChange={handleChange}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Location:
-            <input
-              type="text"
-              name="location"
-              value={service.location}
-              onChange={handleChange}
-              required
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Image URL:
-            <input
-              type="text"
-              name="imageUrl"
-              value={service.imageUrl}
-              onChange={handleChange}
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Category:
-            <select
-              name="category"
-              value={service.category}
-              onChange={handleChange}
-              style={inputStyle}
+        <div style={{ position: "relative" }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              maxWidth: "400px",
+              margin: "20px auto",
+              padding: "20px",
+              border: "1px solid #007BFF",
+              borderRadius: "8px",
+              backgroundColor: "#f8f9fa",
+            }}
+          >
+            <label>
+              Service Name:
+              <input
+                type="text"
+                name="name"
+                value={service.name}
+                onChange={handleChange}
+                required
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: "1px solid #007BFF",
+                  outline: "none",
+                }}
+              />
+            </label>
+            <label>
+              Description:
+              <textarea
+                name="description"
+                value={service.description}
+                onChange={handleChange}
+                required
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: "1px solid #007BFF",
+                  outline: "none",
+                }}
+              />
+            </label>
+            <label>
+              Location:
+              <input
+                type="text"
+                name="location"
+                value={service.location}
+                onChange={handleChange}
+                required
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: "1px solid #007BFF",
+                  outline: "none",
+                }}
+              />
+            </label>
+            <label>
+              Image URL:
+              <input
+                type="text"
+                name="imageUrl"
+                value={service.imageUrl}
+                onChange={handleChange}
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: "1px solid #007BFF",
+                  outline: "none",
+                }}
+              />
+            </label>
+            <label>
+              Category:
+              <select
+                name="category"
+                value={service.category}
+                onChange={handleChange}
+                style={{
+                  marginBottom: "15px",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: "1px solid #007BFF",
+                  outline: "none",
+                }}
+              >
+                <option value="parks">Parks</option>
+                <option value="hotels">Hotels</option>
+                <option value="beaches">Beaches</option>
+              </select>
+            </label>
+            <button
+              type="submit"
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                padding: "10px",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                transition: "background-color 0.3s",
+                marginBottom: "10px", // Add margin for spacing
+              }}
             >
-              <option value="parks">Parks</option>
-              <option value="hotels">Hotels</option>
-              <option value="beaches">Beaches</option>
-            </select>
-          </label>
-          <button type="submit" style={buttonStyle}>Submit Service</button>
-        </form>
+              Submit Service
+            </button>
+            <button
+              onClick={() => setFormVisible(false)}
+              type="button"
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "18px",
+                color: "#FF5733",
+                textAlign: "center",
+              }}
+            >
+              ✖ Close Form
+            </button>
+          </form>
+        </div>
       )}
 
-      <div style={modalStyle}>
-        <div style={modalContentStyle}>
-          <h2>Notification</h2>
-          <p>{modalMessage}</p>
-          <button onClick={() => setModalIsOpen(false)} style={closeButtonStyle}>Close</button>
-        </div>
-      </div>
+      <ToastContainer />
+
     </div>
   );
 };
