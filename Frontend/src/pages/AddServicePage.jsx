@@ -34,7 +34,7 @@ const AddServicePage = () => {
     })
       .then((response) => response.json())
       .then(() => {
-        toast.success("Service added successfully!"); // Toast notification
+        toast.success("Service added successfully!"); 
         setService({
           name: "",
           description: "",
@@ -47,7 +47,7 @@ const AddServicePage = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error adding service. Please try again."); // Toast notification
+        toast.error("Error adding service. Please try again."); 
       });
   };
 
