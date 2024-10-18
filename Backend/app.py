@@ -97,15 +97,15 @@ class Services(Resource):
 # New ServiceById Resource
 class ServiceById(Resource):
     @jwt_required()
-    def get(self, service_id):
-        service = Service.query.get(service_id)
+    def get(self, id):
+        service = Service.query.get(id)
         if not service:
             return make_response(jsonify({"error": "Service not found"}), 404)
         return make_response(jsonify(service.to_dict()), 200)
 
     @jwt_required()
-    def patch(self, service_id):
-        service = Service.query.get(service_id)
+    def patch(self, id):
+        service = Service.query.get(id)
         if not service:
             return make_response(jsonify({"error": "Service not found"}), 404)
         
@@ -121,8 +121,8 @@ class ServiceById(Resource):
         return make_response(jsonify({"message": "Service updated successfully!"}), 200)
 
     @jwt_required()
-    def delete(self, service_id):
-        service = Service.query.get(service_id)
+    def delete(self, id):
+        service = Service.query.get(id)
         if not service:
             return make_response(jsonify({"error": "Service not found"}), 404)
         
