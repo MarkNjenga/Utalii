@@ -93,21 +93,19 @@ class Services(Resource):
         except Exception as e:
             return make_response(jsonify({"error": str(e)}), 400)
 
-    def delete(self):
-        service_id = request.args.get('id')
-        service = Service.query.get(service_id)
-        
-        if service:
-            db.session.delete(service)
-            db.session.commit()
-            return make_response(jsonify({"message": "Service deleted successfully!"}), 200)
-        else:
-            return make_response(jsonify({"error": "Service not found"}), 404)
 
-    def patch(self):
-        service_id = request.args.get('id')
+# New ServiceById Resource
+class ServiceById(Resource):
+    @jwt_required()
+    def get(self, service_id):
         service = Service.query.get(service_id)
-        
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
+        return make_response(jsonify(service.to_dict()), 200)
+
+    @jwt_required()
+    def patch(self, service_id):
+        service = Service.query.get(service_id)
         if not service:
             return make_response(jsonify({"error": "Service not found"}), 404)
         
@@ -118,9 +116,19 @@ class Services(Resource):
             service.description = data['description']
         if 'image' in data:
             service.image = data['image']
-        
+
         db.session.commit()
         return make_response(jsonify({"message": "Service updated successfully!"}), 200)
+
+    @jwt_required()
+    def delete(self, service_id):
+        service = Service.query.get(service_id)
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
+        
+        db.session.delete(service)
+        db.session.commit()
+        return make_response(jsonify({"message": "Service deleted successfully!"}), 200)
 
 
 # Register resources with routes
@@ -131,6 +139,7 @@ api.add_resource(Hotels, '/hotels')
 api.add_resource(Parks, '/parks')
 api.add_resource(Beaches, '/beaches')
 api.add_resource(Services, '/services')
+api.add_resource(ServiceById, '/services/<int:service_id>')
 
 if __name__ == '__main__':
     app.run(port=5555)
