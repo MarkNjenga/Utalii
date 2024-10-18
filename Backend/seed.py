@@ -1,41 +1,115 @@
-from app import app, db
-from models import User, Destination, Service, DestinationService
+from app import app
+from models import db, User, Service, Park, Hotel, Beach, Favorite
 
+# Create the seed data function
 def seed_data():
-    with app.app_context():
-        # Create users
-        user1 = User(name="Alice", email="alice@example.com", phone_number="1234567890", password="password123")
-        user2 = User(name="Bob", email="bob@example.com", phone_number="0987654321", password="password456")
+    # Drop existing data and recreate the tables
+    db.drop_all()
+    db.create_all()
 
-        db.session.add(user1)
-        db.session.add(user2)
-        db.session.commit()
+    # Create users
+    user1 = User(
+        name="John Doe",
+        email="john@example.com",
+        phone_number="1234567890",
+        password="hashed_password"  # You can use a real hashing function for security
+    )
+    user2 = User(
+        name="Jane Smith",
+        email="jane@example.com",
+        phone_number="0987654321",
+        password="hashed_password"
+    )
 
-        # Create destinations
-        destination1 = Destination(location="Paris", price=1000.0, image="paris.jpg", category="Travel", user_id=user1.id)
-        destination2 = Destination(location="New York", price=1500.0, image="new_york.jpg", category="Travel", user_id=user2.id)
+    # Add Services
+    service1 = Service(
+        service_name="Kayaking",
+        image="https://tinyurl.com/4y2mfxy7",  # Replace with a real image URL
+        description="Enjoy a thrilling kayaking experience.",
+        location="Lake Victoria",
+        user_id=user1.id
+    )
+    service2 = Service(
+        service_name="Safari Tour",
+        image="https://tinyurl.com/5thzdc64",
+        description="Experience a breathtaking safari tour.",
+        location="Masai Mara",
+        user_id=user2.id
+    )
 
-        db.session.add(destination1)
-        db.session.add(destination2)
-        db.session.commit()
+    # Add Parks
+    park1 = Park(
+        name="Serengeti National Park",
+        image="https://tinyurl.com/mvzybp6s",
+        description="A majestic wildlife park filled with rich biodiversity.",
+        location="Tanzania",
+        rating=5,
+        address="Serengeti, TZ"
+    )
+    park2 = Park(
+        name="Yellowstone National Park",
+        image="https://tinyurl.com/2vn86sve",
+        description="Explore the geothermal wonders of Yellowstone.",
+        location="USA",
+        rating=4,
+        address="Yellowstone, WY"
+    )
 
-        # Create services
-        service1 = Service(service_name="Guided Tour", image="tour.jpg", description="A guided tour of the city", user_id=user1.id)
-        service2 = Service(service_name="Hotel Booking", image="hotel.jpg", description="Book your stay at a luxury hotel", user_id=user2.id)
+    # Add Hotels
+    hotel1 = Hotel(
+        name="Luxury Safari Lodge",
+        image="https://tinyurl.com/ysurwsee",
+        description="A luxury lodge in the heart of the wilderness.",
+        location="Masai Mara",
+        rating=5,
+        address="Masai Mara, Kenya",
+        price_range=300,
+        user_id=user1.id
+    )
+    hotel2 = Hotel(
+        name="Coastal Beach Resort",
+        image="https://tinyurl.com/6fbay9we",
+        description="A resort with stunning views of the ocean.",
+        location="Diani Beach",
+        rating=4,
+        address="Diani Beach, Kenya",
+        price_range=250,
+        user_id=user2.id
+    )
 
-        db.session.add(service1)
-        db.session.add(service2)
-        db.session.commit()
+    # Add Beaches
+    beach1 = Beach(
+        name="Diani Beach",
+        image="https://tinyurl.com/23x3amj9",
+        description="A pristine white-sand beach on the Kenyan coast.",
+        location="Kenya",
+        rating=5,
+        address="Diani Beach, Kenya"
+    )
+    beach2 = Beach(
+        name="Bondi Beach",
+        image="https://tinyurl.com/bdc64ecv",
+        description="Australia’s iconic beach destination.",
+        location="Australia",
+        rating=4,
+        address="Bondi, NSW"
+    )
 
-        # Create destination services
-        destination_service1 = DestinationService(destination_id=destination1.id, service_id=service1.id, rating=5)
-        destination_service2 = DestinationService(destination_id=destination2.id, service_id=service2.id, rating=4)
+    # Add Favorites
+    favorite1 = Favorite(name="Wildlife Experiences")
+    favorite2 = Favorite(name="Beach Getaways")
 
-        db.session.add(destination_service1)
-        db.session.add(destination_service2)
-        db.session.commit()
+    # Associate Parks, Hotels, and Beaches with Favorites
+    favorite1.parks.extend([park1, park2])
+    favorite2.beaches.append(beach1)
+    favorite2.hotels.append(hotel2)
 
-        print("Data seeded successfully!")
+    # Commit the objects to the session
+    db.session.add_all([user1, user2, service1, service2, park1, park2, hotel1, hotel2, beach1, beach2, favorite1, favorite2])
+    db.session.commit()
 
+# Ensure the app context is set up for database operations
 if __name__ == '__main__':
-    seed_data()
+    with app.app_context():
+        seed_data()
+        print("Database seeded successfully!")
