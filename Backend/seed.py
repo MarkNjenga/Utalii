@@ -12,7 +12,7 @@ def seed_data():
         name="John Doe",
         email="john@example.com",
         phone_number="1234567890",
-        password="hashed_password"  # You can use a real hashing function for security
+        password="hashed_password"  
     )
     user2 = User(
         name="Jane Smith",
@@ -24,7 +24,7 @@ def seed_data():
     # Add Services
     service1 = Service(
         service_name="Kayaking",
-        image="https://tinyurl.com/4y2mfxy7",  # Replace with a real image URL
+        image="https://tinyurl.com/4y2mfxy7", 
         description="Enjoy a thrilling kayaking experience.",
         location="Lake Victoria",
         user_id=user1.id
