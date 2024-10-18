@@ -39,7 +39,7 @@ body{
 }
 
 .home-container {
-  background-image: url("./images/elephants-900x450.jpg");
+  background-image: url("./images/two-giraffes-close-up-eating-green-leaves-love-wild-animal-behaviour-long-neck-zoology-world-behavior-protection-323801522.webp");
   background-size: cover; /* Changed to cover for better responsiveness */
   background-position: center;
   height: 100vh;
@@ -48,7 +48,7 @@ body{
   justify-content: center;
   align-items: center;
   text-align: center;
-  color:#fff9f9;
+  color:black;
 }
 
 .hz-container {
@@ -79,11 +79,11 @@ img {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin: 45px auto;
   display: flex; /* Set to flex to align items side by side */
-  flex-direction: row; /* Aligns items in a row */
+  flex-direction: row-reverse; /* Aligns items in a row */
   justify-content: space-around; /* Distributes space evenly */
-  flex-wrap: nowrap; /* Prevents wrapping, keeps items in a single line */
-  gap: 1rem;
-  width: 80%;
+  flex-wrap: nowrap; 
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .container h2 {

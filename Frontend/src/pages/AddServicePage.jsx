@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
-import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddServicePage = () => {
   const [service, setService] = useState({
@@ -13,11 +12,6 @@ const AddServicePage = () => {
     imageUrl: "",
     category: "parks", // Default category
   });
-
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-
   const [formVisible, setFormVisible] = useState(false);
   const [services, setServices] = useState([]);
   const [editingServiceId, setEditingServiceId] = useState(null);
@@ -29,7 +23,7 @@ const AddServicePage = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`https://alurageek-api-q6u8.vercel.app/parks`);
+      const response = await fetch(https://alurageek-api-q6u8.vercel.app/parks);
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -49,8 +43,8 @@ const AddServicePage = () => {
 
     const method = editingServiceId ? "PUT" : "POST";
     const url = editingServiceId
-      ? `https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}`
-      : `https://alurageek-api-q6u8.vercel.app/${category}`;
+      ? https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}
+      : https://alurageek-api-q6u8.vercel.app/${category};
 
     fetch(url, {
       method,
@@ -61,11 +55,7 @@ const AddServicePage = () => {
     })
       .then((response) => response.json())
       .then(() => {
-
-        toast.success("Service added successfully!"); // Toast notification
-
         toast.success(editingServiceId ? "Service updated successfully!" : "Service added successfully!");
-
         setService({
           name: "",
           description: "",
@@ -73,17 +63,6 @@ const AddServicePage = () => {
           imageUrl: "",
           category: "parks",
         });
-
-        navigate(`/${category}`);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setModalMessage("Error adding service. Please try again.");
-        setModalIsOpen(true);
-      });
-  };
-
-
         setEditingServiceId(null);
         fetchServices(); // Refresh the service list
         setFormVisible(false); // Hide the form after submission
@@ -102,7 +81,7 @@ const AddServicePage = () => {
 
   const handleDelete = (id) => {
     const category = services.find((s) => s.id === id).category; // Get category from the service
-    fetch(`https://alurageek-api-q6u8.vercel.app/${category}/${id}`, {
+    fetch(https://alurageek-api-q6u8.vercel.app/${category}/${id}, {
       method: "DELETE",
     })
       .then(() => {
@@ -115,21 +94,17 @@ const AddServicePage = () => {
       });
   };
 
-
   return (
     <div>
       <NavBar />
       <Outlet />
+
       <h2>Add New Service</h2>
       <button
-
-        onClick={() => setFormVisible(true)}
-
         onClick={() => {
           setFormVisible(true);
           setEditingServiceId(null); // Reset editing state
         }}
-
         style={{
           backgroundColor: "#007BFF",
           color: "white",
@@ -252,7 +227,7 @@ const AddServicePage = () => {
                 borderRadius: "4px",
                 cursor: "pointer",
                 transition: "background-color 0.3s",
-                marginBottom: "10px",
+                marginBottom: "10px", // Add margin for spacing
               }}
             >
               Submit Service
@@ -275,8 +250,6 @@ const AddServicePage = () => {
         </div>
       )}
 
-      <ToastContainer /> {/* Toast container for notifications */}
-
       <h3>Services List</h3>
       <ul style={{ listStyleType: "none", padding: 0 }}>
         {services.map((service) => (
@@ -294,9 +267,9 @@ const AddServicePage = () => {
       </ul>
 
       <ToastContainer />
-
     </div>
   );
 };
 
 export default AddServicePage;
+

@@ -10,7 +10,7 @@ function Hotels() {
   useEffect(() => {
     const fetchHotels = async () => {
       const response = await fetch(
-        "https://www.google.com/imgres?q=hotel&imgurl=https%3A%2F%2Fimages.bubbleup.com%2Fwidth1920%2Fquality35%2Fmville2017%2F1-brand%2F1-margaritaville.com%2Fgallery-media%2F220803-compasshotel-medford-pool-73868-1677873697-78625-1694019828.jpg&imgrefurl=https%3A%2F%2Fwww.margaritaville.com%2Fstay&docid=3X8tUA05-lIGRM&tbnid=Kpf8HJeYbkkuWM&vet=12ahUKEwirlp78o5WJAxUlzQIHHWfNOPkQM3oECGkQAA..i&w=1920&h=1370&hcb=2&ved=2ahUKEwirlp78o5WJAxUlzQIHHWfNOPkQM3oECGkQAA"
+        "http://127.0.0.1:5000/hotels"
       );
       const data = await response.json();
       setBufferHotels(data);

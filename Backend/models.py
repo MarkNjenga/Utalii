@@ -31,7 +31,10 @@ class User(db.Model, SerializerMixin):
     # Many-to-Many relationship with user_favorite
     favorites = db.relationship('Favorite', secondary=user_favorite, backref='users')
 
-    serialize_rules = ('-services.user', '-hotels.user', '-favorites.users')
+
+    # Exclude recursive relationships
+    serialize_rules = ('-services.user', '-hotels.user', '-favorites.users', '-favorites.parks', '-favorites.hotels', '-favorites.beaches')
+
 
 # Service Model
 class Service(db.Model, SerializerMixin):
@@ -43,7 +46,10 @@ class Service(db.Model, SerializerMixin):
     description = db.Column(db.String, nullable=False)
     location = db.Column(db.String, nullable=False)
 
+
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    # Exclude the user.services back reference to avoid recursion
 
     serialize_rules = ('-user.services',)
 
@@ -59,8 +65,13 @@ class Park(db.Model, SerializerMixin):
     rating = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String, nullable=False)
 
+
     # Foreign key to Favorite
     favorite_id = db.Column(db.Integer, ForeignKey('favorites.id'))
+
+    # Exclude recursive relationships
+    serialize_rules = ('-favorite.parks',)
+
 
 # Hotel Model
 class Hotel(db.Model, SerializerMixin):
@@ -80,7 +91,10 @@ class Hotel(db.Model, SerializerMixin):
     # Foreign key to Favorite
     favorite_id = db.Column(db.Integer, ForeignKey('favorites.id'))
 
-    serialize_rules = ('-user.hotels',)
+
+    # Exclude recursive relationships
+    serialize_rules = ('-user.hotels', '-favorite.hotels')
+
 
 # Beach Model
 class Beach(db.Model, SerializerMixin):
@@ -97,6 +111,10 @@ class Beach(db.Model, SerializerMixin):
     # Foreign key to Favorite
     favorite_id = db.Column(db.Integer, ForeignKey('favorites.id'))
 
+    # Exclude recursive relationships
+    serialize_rules = ('-favorite.beaches',)
+
+
 # Favorite Model
 class Favorite(db.Model, SerializerMixin):
     __tablename__ = 'favorites'
@@ -109,5 +127,7 @@ class Favorite(db.Model, SerializerMixin):
     hotels = db.relationship('Hotel', backref='favorite')
     beaches = db.relationship('Beach', backref='favorite')
 
-    serialize_rules = ('-users.favorites',)
- 
+
+    # Exclude recursive relationships
+    serialize_rules = ('-users.favorites', '-parks.favorite', '-hotels.favorite', '-beaches.favorite')
+
