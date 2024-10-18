@@ -5,7 +5,7 @@ import Home from "./components/Home";
 import Hotels from "./pages/Hotels";
 import Parks from "./pages/Parks";
 import Beaches from "./pages/Beaches";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/NavBar";
 import AddServicePage from "./components/AddServicePage";
 
 
