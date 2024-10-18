@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
+from werkzeug.security import generate_password_hash, check_password_hash  # For password hashing
 from models import db, User, Hotel, Park, Beach, Service
 
 app = Flask(__name__)
@@ -29,34 +30,71 @@ def initialize_tables():
         db.create_all()
         tables_initialized = True
 
-class SignupResource(Resource):
-    def post(self):
-        data = request.json
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+
+    # Check if all required fields are present
+    if not all(key in data for key in ('name', 'email', 'phone_number', 'password')):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # Check if user already exists
+    user = User.query.filter_by(email=data['email']).first()
+    if user:
+        return jsonify({"error": "User already exists!"}), 409
+
+    try:
+        # Use pbkdf2:sha256 for password hashing
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+
         new_user = User(
             name=data['name'],
             email=data['email'],
             phone_number=data['phone_number'],
-            password=data['password']  # Hash the password before saving
+            password=hashed_password
         )
+
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"msg": "User registered successfully!"}), 201
 
-class LoginResource(Resource):
-    def post(self):
-        data = request.json
-        user = User.query.filter_by(email=data['email']).first()
-        if user and user.password == data['password']:  # Add hashed password check here
-            access_token = create_access_token(identity={'user_id': user.id})
-            return jsonify(access_token=access_token), 200
-        return jsonify({"msg": "Bad username or password"}), 401
+        return jsonify({"message": "User registered successfully!"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
-class ProtectedResource(Resource):
-    @jwt_required()
-    def get(self):
-        current_user = get_jwt_identity()
-        return jsonify({"msg": "Welcome!", "user_id": current_user['user_id']}), 200
+# Login Route
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
     
+    # Validate input data
+    if not all(key in data for key in ('email', 'password')):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    user = User.query.filter_by(email=data['email']).first()
+    
+    if not user or not check_password_hash(user.password, data['password']):
+        return jsonify({"error": "Invalid email or password!"}), 401
+
+    # Generate a JWT access token
+    access_token = create_access_token(identity=user.id)
+    return jsonify({"access_token": access_token}), 200
+
+# Logout Route (optional, depending on how you handle the client-side token)
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    # Here, you can revoke tokens or handle client-side token invalidation
+    return jsonify({"message": "Successfully logged out!"}), 200
+
+# Example Protected Route to Test JWT Authentication
+@app.route('/home', methods=['GET'])
+@jwt_required()
+def profile():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if user:
+        return jsonify(user.to_dict()), 200
+    return jsonify({"error": "User not found"}), 404
 
 class Hotels(Resource):
     def get(self):
@@ -92,7 +130,6 @@ class Services(Resource):
             return make_response(jsonify({"message": "Service added successfully!"}), 201)
         except Exception as e:
             return make_response(jsonify({"error": str(e)}), 400)
-
 
 # New ServiceById Resource
 class ServiceById(Resource):
@@ -130,11 +167,7 @@ class ServiceById(Resource):
         db.session.commit()
         return make_response(jsonify({"message": "Service deleted successfully!"}), 200)
 
-
 # Register resources with routes
-api.add_resource(SignupResource, '/signup')
-api.add_resource(LoginResource, '/login')
-api.add_resource(ProtectedResource, '/protected')
 api.add_resource(Hotels, '/hotels')
 api.add_resource(Parks, '/parks')
 api.add_resource(Beaches, '/beaches')
@@ -142,4 +175,4 @@ api.add_resource(Services, '/services')
 api.add_resource(ServiceById, '/services/<int:service_id>')
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555, debug=True)
