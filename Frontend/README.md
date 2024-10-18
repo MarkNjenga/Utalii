@@ -1,11 +1,13 @@
 # Kenya Tours
 
 ## Author
-Shani Sera
+
+Sera Shani 
 Mark Wanjiku
-Nicholas Trevor
-Brenda Akinyi
+Brenda Akinyi 
 Lemachi James Pascal
+Trevor Nicholas 
+
 
 
 ## Description
@@ -56,9 +58,9 @@ The project is built on the following technologies:
 
 HTML
 CSS
+Python
 Figma
 Javascript
-JSON server
 REACT
 Vite config
 

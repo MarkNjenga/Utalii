@@ -23,7 +23,7 @@ const AddServicePage = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`https://alurageek-api-q6u8.vercel.app/parks`);
+      const response = await fetch('https://alurageek-api-q6u8.vercel.app/parks');
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -43,8 +43,8 @@ const AddServicePage = () => {
 
     const method = editingServiceId ? "PUT" : "POST";
     const url = editingServiceId
-      ? `https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}`
-      : `https://alurageek-api-q6u8.vercel.app/${category}`;
+      ? 'https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}'
+      : 'https://alurageek-api-q6u8.vercel.app/${category}';
 
     fetch(url, {
       method,
@@ -81,7 +81,7 @@ const AddServicePage = () => {
 
   const handleDelete = (id) => {
     const category = services.find((s) => s.id === id).category; // Get category from the service
-    fetch(`https://alurageek-api-q6u8.vercel.app/${category}/${id}`, {
+    fetch('https://alurageek-api-q6u8.vercel.app/${category}/${id}', {
       method: "DELETE",
     })
       .then(() => {

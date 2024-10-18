@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
-from models import db, User, Destination, Hotel, Park, Beach
+from models import db, User, Hotel, Park, Beach, Service
 
 app = Flask(__name__)
 CORS(app)
@@ -29,18 +29,6 @@ def initialize_tables():
         db.create_all()
         tables_initialized = True
 
-class DestinationsResource(Resource):
-    def get(self):
-        destinations = Destination.query.all()
-        response_dict = [destination.to_dict() for destination in destinations]
-        return jsonify(response_dict)
-
-class ParksResource(Resource):
-    def get(self):
-        parks = Destination.query.filter_by(category='park').all()
-        response_dict = [park.to_dict() for park in parks]
-        return make_response(jsonify(response_dict), 200)
-
 class SignupResource(Resource):
     def post(self):
         data = request.json
@@ -48,7 +36,7 @@ class SignupResource(Resource):
             name=data['name'],
             email=data['email'],
             phone_number=data['phone_number'],
-            password=data['password']  # Should hash in production
+            password=data['password']  # Hash the password before saving
         )
         db.session.add(new_user)
         db.session.commit()
@@ -58,7 +46,7 @@ class LoginResource(Resource):
     def post(self):
         data = request.json
         user = User.query.filter_by(email=data['email']).first()
-        if user and user.password == data['password']:  # Hash password check in production
+        if user and user.password == data['password']:  # Add hashed password check here
             access_token = create_access_token(identity={'user_id': user.id})
             return jsonify(access_token=access_token), 200
         return jsonify({"msg": "Bad username or password"}), 401
@@ -72,71 +60,86 @@ class ProtectedResource(Resource):
 
 class Hotels(Resource):
     def get(self):
-        hotels = []
-        hotels_dict = [h.to_dict() for h in Hotel.query.all()]
-        hotels.append(hotels_dict)
-        response = make_response(
-            hotels,
-            200
-        )
-        return response
-class Parks(db.Model, Resource):
-    def get(self):
-        parks = []
-        parks_dict = [p.to_dict() for p in Park.query.all()]
-        parks.append(parks_dict)
-        response = make_response(
-            parks,
-            200
-        )
-        return response
-    
-class Beaches(db.Model, Resource):
-    def get(self):
-        beaches = []
-        beaches_dict = [b for b in Beach.query.all()]
-        beaches.append(beaches_dict)
-        response = make_response(
-            beaches,
-            200
-        )
-        return response
+        hotels = [h.to_dict() for h in Hotel.query.all()]
+        return make_response(jsonify(hotels), 200)
 
-class Services(db.Model, Resource):
+class Parks(Resource):  
+    def get(self):
+        parks = [p.to_dict() for p in Park.query.all()]
+        return make_response(jsonify(parks), 200)
+    
+class Beaches(Resource):  
+    def get(self):
+        beaches = [b.to_dict() for b in Beach.query.all()]
+        return make_response(jsonify(beaches), 200)
+
+class Services(Resource): 
+    def get(self):
+        services = [s.to_dict() for s in Service.query.all()]
+        return make_response(jsonify(services), 200)
+
     def post(self):
         data = request.json
         try:
-            new_destination = Destination(
-                name=data['name'],
+            new_service = Service(
+                service_name=data['service_name'],  
                 description=data['description'],
-                category=data['category'],
-                location=data['location']
+                image=data['image'],  
+                user_id=data.get('user_id')  
             )
-            db.session.add(new_destination)
+            db.session.add(new_service)
             db.session.commit()
-            return make_response(jsonify({"message": "Destination added successfully!"}), 201)
+            return make_response(jsonify({"message": "Service added successfully!"}), 201)
         except Exception as e:
             return make_response(jsonify({"error": str(e)}), 400)
-    def delete(self):
-        destination_id = request.args.get('id')
-        destination = Destination.query.get(destination_id)
+
+
+# New ServiceById Resource
+class ServiceById(Resource):
+    @jwt_required()
+    def get(self, service_id):
+        service = Service.query.get(service_id)
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
+        return make_response(jsonify(service.to_dict()), 200)
+
+    @jwt_required()
+    def patch(self, service_id):
+        service = Service.query.get(service_id)
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
         
-        if destination:
-            db.session.delete(destination)
-            db.session.commit()
-            return make_response(jsonify({"message": "Destination deleted successfully!"}), 200)
-        else:
-            return make_response(jsonify({"error": "Destination not found"}), 404)
-# Add resources to API
-api.add_resource(DestinationsResource, '/destinations')
-api.add_resource(ParksResource, '/parks')
-api.add_resource(SignupResource, '/api/auth/signup')
-api.add_resource(LoginResource, '/api/auth/login')
-api.add_resource(ProtectedResource, '/api/protected')
+        data = request.json
+        if 'service_name' in data:
+            service.service_name = data['service_name']
+        if 'description' in data:
+            service.description = data['description']
+        if 'image' in data:
+            service.image = data['image']
+
+        db.session.commit()
+        return make_response(jsonify({"message": "Service updated successfully!"}), 200)
+
+    @jwt_required()
+    def delete(self, service_id):
+        service = Service.query.get(service_id)
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
+        
+        db.session.delete(service)
+        db.session.commit()
+        return make_response(jsonify({"message": "Service deleted successfully!"}), 200)
+
+
+# Register resources with routes
+api.add_resource(SignupResource, '/signup')
+api.add_resource(LoginResource, '/login')
+api.add_resource(ProtectedResource, '/protected')
 api.add_resource(Hotels, '/hotels')
 api.add_resource(Parks, '/parks')
 api.add_resource(Beaches, '/beaches')
 api.add_resource(Services, '/services')
+api.add_resource(ServiceById, '/services/<int:service_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5555)
