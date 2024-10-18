@@ -10,6 +10,7 @@ import AddServicePage from "./components/AddServicePage";
 import Login from './Login';
 import Logout from './Logout';
 
+
 const App = () => {
   const isAuth = localStorage.getItem('auth');
 
