@@ -10,7 +10,7 @@ function Beaches() {
   useEffect(() => {
     const fetchBeaches = async () => {
       const response = await fetch(
-        "https://alurageek-api-q6u8.vercel.app/beaches"
+        "http://127.0.0.1:5000/beaches"
       );
       const data = await response.json();
       setBufferBeaches(data);
