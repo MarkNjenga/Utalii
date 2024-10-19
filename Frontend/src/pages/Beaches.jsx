@@ -10,7 +10,7 @@ function Beaches() {
   useEffect(() => {
     const fetchBeaches = async () => {
       const response = await fetch(
-        "http://127.0.0.1:5000/beaches"
+        "http://127.0.0.1:5555/beaches"
       );
       const data = await response.json();
       setBufferBeaches(data);
@@ -42,9 +42,6 @@ function Beaches() {
       <NavBar />
       <Outlet />
       <SearchDestination onSearch={filterBeaches} />
-      <Link to="/add-service">
-        <button>Add Beach</button>
-      </Link>
       {BeachesToRender}
     </div>
   );

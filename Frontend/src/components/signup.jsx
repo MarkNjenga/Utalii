@@ -1,71 +1,101 @@
+// signup.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import './signup.css'; // Import the CSS
+import './Auth.css';  // Import the CSS file for styling
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+  });
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Basic password validation
-    if (password !== confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-
-    alert('Account created successfully!');
-    navigate('/login'); // Redirect to login page
+  // Handle form input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate form data before submitting
+    if (!formData.name || !formData.email || !formData.phone_number || !formData.password) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+  
+    try {
+      // Make API call to signup endpoint
+      const response = await fetch('http://localhost:5555/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData), // Send form data as JSON
+      });
+  
+      const result = await response.json();
+  
+      // Handle response from the server
+      if (response.ok) {
+        // On successful signup, redirect to login page
+        navigate('/login');
+      } else {
+        // Set error message returned from the backend
+        setError(result.error);
+      }
+    } catch (error) {
+      // Handle any network or other errors
+      setError('Something went wrong.');
+    }
+  };
+  
   return (
-    <div className="signup-container">
-      <h2>Sign Up</h2>
+    <div className="auth-form">
+      <h2>Signup</h2>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="phone_number"
+          placeholder="Phone Number"
+          value={formData.phone_number}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Sign Up</button>
       </form>
-      
     </div>
   );
 };

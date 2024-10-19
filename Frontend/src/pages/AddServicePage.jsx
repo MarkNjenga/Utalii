@@ -3,6 +3,8 @@ import NavBar from "../components/NavBar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './AddServicePage.css';
+
 
 const AddServicePage = () => {
   const [service, setService] = useState({
@@ -21,6 +23,7 @@ const AddServicePage = () => {
     fetchServices();
   }, []);
 
+  // Fetch existing services
   const fetchServices = async () => {
     try {
       const response = await fetch('https://alurageek-api-q6u8.vercel.app/parks');
@@ -32,19 +35,21 @@ const AddServicePage = () => {
     }
   };
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setService({ ...service, [name]: value });
   };
 
+  // Handle form submission for adding/updating service
   const handleSubmit = (e) => {
     e.preventDefault();
     const { category, ...serviceData } = service;
 
     const method = editingServiceId ? "PUT" : "POST";
     const url = editingServiceId
-      ? 'https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}'
-      : 'https://alurageek-api-q6u8.vercel.app/${category}';
+      ? `https://alurageek-api-q6u8.vercel.app/${category}/${editingServiceId}`
+      : `https://alurageek-api-q6u8.vercel.app/${category}`;
 
     fetch(url, {
       method,
@@ -73,15 +78,17 @@ const AddServicePage = () => {
       });
   };
 
+  // Handle editing an existing service
   const handleEdit = (service) => {
     setService(service);
     setEditingServiceId(service.id); // Assuming service has an id
     setFormVisible(true);
   };
 
+  // Handle deleting a service
   const handleDelete = (id) => {
     const category = services.find((s) => s.id === id).category; // Get category from the service
-    fetch('https://alurageek-api-q6u8.vercel.app/${category}/${id}', {
+    fetch(`https://alurageek-api-q6u8.vercel.app/${category}/${id}`, {
       method: "DELETE",
     })
       .then(() => {
