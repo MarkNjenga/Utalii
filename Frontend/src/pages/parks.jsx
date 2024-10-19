@@ -10,7 +10,7 @@ function Parks() {
   useEffect(() => {
     const fetchParks = async () => {
       const response = await fetch(
-        "http://127.0.0.1:5000/parks"
+        "http://127.0.0.1:5555/parks"
       );
       const data = await response.json();
       setParks(data);
@@ -45,9 +45,7 @@ function Parks() {
       <NavBar />
       <Outlet />
       <SearchDestination parks={parks} onSearch={filterParks} />
-      <Link to="/add-service">
-        <button>Add Park</button>
-      </Link>
+
       <div>{parksToRender}</div>
     </div>
   );

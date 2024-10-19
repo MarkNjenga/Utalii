@@ -1,17 +1,32 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+// logout.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    localStorage.removeItem('auth');
-    history.push('/login');
-  }, [history]);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:5555/logout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
-    <div>
+    <div className="auth-form">
       <h2>Logout</h2>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

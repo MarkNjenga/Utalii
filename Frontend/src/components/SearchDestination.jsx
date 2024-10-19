@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { FaSearchLocation } from "react-icons/fa";
+import { useState } from "react";
 
-function SearchDestination({ onSearch}) {
-    const [searchTerm, setSearchTerm] = useState('');
+function SearchDestination({ onSearch }) {
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    onSearch(searchTerm);
+  };
 
-    function handleChange(e) {
-        setSearchTerm(e.target.value);
-        onSearch(e.target.value);
-    }
-    return (
-    <div>
-            <input
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleChange}
-            />
-            <i className="search-icon"><FaSearchLocation /></i>  
-               </div>
-    );
-};
+  return (
+    <form onSubmit={handleSearch}>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button type="submit">Search</button>
+    </form>
+  );
+}
 
-export default SearchDestination
+export default SearchDestination;

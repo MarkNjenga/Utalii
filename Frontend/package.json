@@ -19,7 +19,8 @@
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.26.0",
     "react-toastify": "^10.0.5",
-    "server": "^1.0.39"
+    "server": "^1.0.39",
+    "sweetalert2": "^11.14.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

@@ -111,25 +111,29 @@ class Beaches(Resource):
         beaches = [b.to_dict() for b in Beach.query.all()]
         return make_response(jsonify(beaches), 200)
 
-class Services(Resource): 
+class Services(Resource):
     def get(self):
         services = [s.to_dict() for s in Service.query.all()]
         return make_response(jsonify(services), 200)
 
     def post(self):
-        data = request.json
-        try:
-            new_service = Service(
-                service_name=data['service_name'],  
-                description=data['description'],
-                image=data['image'],  
-                user_id=data.get('user_id')  
-            )
-            db.session.add(new_service)
-            db.session.commit()
-            return make_response(jsonify({"message": "Service added successfully!"}), 201)
-        except Exception as e:
-            return make_response(jsonify({"error": str(e)}), 400)
+        data = request.get_json()
+
+        # Validate the incoming request data
+        name = data.get('name')
+        description = data.get('description')
+
+        if not name or not description:
+            return make_response(jsonify({"error": "Name and description are required"}), 400)
+
+        # Create a new Service instance
+        new_service = Service(name=name, description=description)
+
+        # Add and commit to the database
+        db.session.add(new_service)
+        db.session.commit()
+
+        return make_response(jsonify(new_service.to_dict()), 201)
 
 # New ServiceById Resource
 class ServiceById(Resource):
@@ -141,21 +145,27 @@ class ServiceById(Resource):
         return make_response(jsonify(service.to_dict()), 200)
 
     @jwt_required()
-    def patch(self, service_id):
-        service = Service.query.get(service_id)
-        if not service:
-            return make_response(jsonify({"error": "Service not found"}), 404)
-        
-        data = request.json
-        if 'service_name' in data:
-            service.service_name = data['service_name']
-        if 'description' in data:
-            service.description = data['description']
-        if 'image' in data:
-            service.image = data['image']
 
-        db.session.commit()
-        return make_response(jsonify({"message": "Service updated successfully!"}), 200)
+    def put(self, service_id):
+        data = request.get_json()
+
+        # Find the service by ID
+        service = Service.query.get(service_id)
+        if service is None:
+            return {"message": "Service not found"}, 404
+
+        # Update service details
+        service.name = data.get("name", service.name)
+        service.description = data.get("description", service.description)
+        service.location = data.get("location", service.location)
+        service.imageUrl = data.get("imageUrl", service.imageUrl)
+        service.category = data.get("category", service.category)
+
+        try:
+            db.session.commit()
+            return jsonify(service.to_dict())
+        except Exception as e:
+            return {"message": str(e)}, 400
 
     @jwt_required()
     def delete(self, service_id):

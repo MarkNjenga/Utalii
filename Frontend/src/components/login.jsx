@@ -1,26 +1,37 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
-import './login.css';
+import { useNavigate } from 'react-router-dom';
+import './Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Simple login logic
-    if (email === 'user@example.com' && password === 'password123') {
+    const response = await fetch('http://localhost:5555/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
       localStorage.setItem('auth', 'true');
-      navigate('/home'); // Use navigate to redirect to home page
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('username', data.username); // Store the username
+      navigate('/'); // Redirect to home page
     } else {
-      alert('Incorrect email or password');
+      const errorData = await response.json();
+      alert(errorData.message || 'Login failed');
     }
   };
 
   return (
-    <div>
+    <div className="auth-form">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
