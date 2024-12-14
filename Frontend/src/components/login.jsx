@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const response = await fetch('http://localhost:5555/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch('http://127.0.0.1:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      localStorage.setItem('auth', 'true');
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('username', data.username); // Store the username
-      navigate('/'); // Redirect to home page
-    } else {
-      const errorData = await response.json();
-      alert(errorData.message || 'Login failed');
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('auth', 'true');
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('username', data.username);
+        navigate('/'); // Redirect to home page
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,27 +44,34 @@ const Login = () => {
     <div className="auth-form">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label>Email:</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="Enter your email"
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Password:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Enter your password"
           />
         </div>
-        <button type="submit">Login</button>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+      <p>
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+      </p>
     </div>
   );
 };

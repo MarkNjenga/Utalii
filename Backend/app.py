@@ -113,61 +113,65 @@ class Beaches(Resource):
 
 class Services(Resource):
     def get(self):
-        services = [s.to_dict() for s in Service.query.all()]
-        return make_response(jsonify(services), 200)
-
+        # Fetch all services from the database
+        services = Service.query.all()
+        services_list = [service.to_dict() for service in services]
+        return {"services": services_list}, 200
     def post(self):
         data = request.get_json()
 
-        # Validate the incoming request data
+        # Validate required fields
         name = data.get('name')
         description = data.get('description')
-
         if not name or not description:
-            return make_response(jsonify({"error": "Name and description are required"}), 400)
+            return make_response(
+                jsonify({"error": "Both 'name' and 'description' are required."}), 400
+            )
 
-        # Create a new Service instance
-        new_service = Service(name=name, description=description)
+        # Optional fields
+        image = data.get('image', None)
+        location = data.get('location', None)
 
-        # Add and commit to the database
-        db.session.add(new_service)
-        db.session.commit()
+        try:
+            # Create a new Service instance
+            new_service = Service(
+                service_name=name,
+                description=description,
+                image=image,
+                location=location,
+            )
 
-        return make_response(jsonify(new_service.to_dict()), 201)
+            db.session.add(new_service)
+            db.session.commit()
+
+            return make_response(jsonify(new_service.to_dict()), 201)
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of an error
+            return make_response(jsonify({"error": str(e)}), 500)
 
 # New ServiceById Resource
 class ServiceById(Resource):
-    @jwt_required()
-    def get(self, service_id):
-        service = Service.query.get(service_id)
-        if not service:
-            return make_response(jsonify({"error": "Service not found"}), 404)
-        return make_response(jsonify(service.to_dict()), 200)
-
-    @jwt_required()
-
+    # @jwt_required()
     def put(self, service_id):
         data = request.get_json()
 
-        # Find the service by ID
         service = Service.query.get(service_id)
-        if service is None:
-            return {"message": "Service not found"}, 404
+        if not service:
+            return make_response(jsonify({"error": "Service not found"}), 404)
 
-        # Update service details
-        service.name = data.get("name", service.name)
+        service.service_name = data.get("name", service.service_name)
         service.description = data.get("description", service.description)
+        service.image = data.get("image", service.image)
         service.location = data.get("location", service.location)
-        service.imageUrl = data.get("imageUrl", service.imageUrl)
-        service.category = data.get("category", service.category)
 
         try:
             db.session.commit()
-            return jsonify(service.to_dict())
+            return make_response(jsonify(service.to_dict()), 200)
         except Exception as e:
-            return {"message": str(e)}, 400
+            return make_response(jsonify({"error": str(e)}), 400)
 
-    @jwt_required()
+
+    # @jwt_required()
     def delete(self, service_id):
         service = Service.query.get(service_id)
         if not service:

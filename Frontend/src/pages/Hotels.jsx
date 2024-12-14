@@ -9,9 +9,7 @@ function Hotels() {
 
   useEffect(() => {
     const fetchHotels = async () => {
-      const response = await fetch(
-        "http://127.0.0.1:5555/hotels"
-      );
+      const response = await fetch("http://127.0.0.1:5000/hotels");
       const data = await response.json();
       setBufferHotels(data);
       setHotels(data);
@@ -29,6 +27,7 @@ function Hotels() {
       </div>
     );
   });
+
   function filterHotels(searchTerm) {
     const filteredHotels = hotels.filter((hotel) =>
       hotel.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -37,11 +36,13 @@ function Hotels() {
   }
 
   return (
-    <div>
+    <div className="hotels-page">
       <NavBar />
       <Outlet />
-      <SearchDestination onSearch={filterHotels} />
-      <div>{HotelsToRender}</div>
+      <div className="search-bar">
+        <SearchDestination onSearch={filterHotels} />
+      </div>
+      <div className="hotels-list">{HotelsToRender}</div>
     </div>
   );
 }
