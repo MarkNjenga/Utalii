@@ -10,7 +10,7 @@ function Hotels() {
   useEffect(() => {
     const fetchHotels = async () => {
       const response = await fetch(
-        "https://alurageek-api-q6u8.vercel.app/hotels"
+        "http://127.0.0.1:5000/hotels"
       );
       const data = await response.json();
       setBufferHotels(data);

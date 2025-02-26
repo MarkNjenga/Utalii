@@ -1,10 +1,14 @@
 # Kenya Tours
 
 ## Author
-Gerald Mwiti
-Lemachi Pascal
-Raymond Muthii
-Neema Naledi
+
+Sera Shani 
+Mark Wanjiku
+Brenda Akinyi 
+Lemachi James Pascal
+Trevor Nicholas 
+
+
 
 ## Description
 Kenya Tours is a website that helps tourists find hotels, parks and beaches to visit while in Kenya so they don't have to struggle finding places to visit. Anyone can add a destination that is not already on the website to help the website grow.
@@ -54,9 +58,9 @@ The project is built on the following technologies:
 
 HTML
 CSS
+Python
 Figma
 Javascript
-JSON server
 REACT
 Vite config
 

@@ -1,8 +1,10 @@
-import Home from "./components/home";
+import Home from "./components/Home";
 import Hotels from "./pages/Hotels";
-import Parks from "./pages/parks";
+import Parks from "./pages/Parks";
 import Beaches from "./pages/Beaches";
 import AddServicePage from "./pages/AddServicePage";
+import Signup from "./components/signup"
+import Login from "./components/login";
 
 const routes = [
   {
@@ -24,7 +26,16 @@ const routes = [
       {
         path: "/add-service",
         element: <AddServicePage />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       }
+
     
 ]
 

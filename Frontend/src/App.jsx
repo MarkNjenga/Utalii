@@ -7,18 +7,26 @@ import Parks from "./pages/Parks";
 import Beaches from "./pages/Beaches";
 import Navbar from "./components/NavBar";
 import AddServicePage from "./components/AddServicePage";
-
+import Login from './Login';
+import Logout from './Logout';
 
 const App = () => {
+  const isAuth = localStorage.getItem('auth');
+
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/login" component={<Login/>} />
+        <Route path="/logout" component={<Logout/>} />
         <Route path="/hotels" element={<Hotels />} />
         <Route path="/parks" element={<Parks />} />
         <Route path="/beaches" element={<Beaches />} />
         <Route path="/add-service" element={<AddServicePage />} />
+        <Route path="/home" render={() => (
+          isAuth ? <Home /> : <Redirect to="/login" />
+        )} />
+        <Redirect from="/" to="/login" />
       </Routes>
     </Router>
   );
