@@ -9,9 +9,7 @@ function Beaches() {
 
   useEffect(() => {
     const fetchBeaches = async () => {
-      const response = await fetch(
-        "http://127.0.0.1:5000/beaches"
-      );
+      const response = await fetch("http://127.0.0.1:5000/beaches");
       const data = await response.json();
       setBufferBeaches(data);
       setBeaches(data);
@@ -21,7 +19,7 @@ function Beaches() {
 
   const BeachesToRender = bufferBeaches.map((beach) => {
     return (
-      <div className="beaches" key={beach.id}>
+      <div className="beach" key={beach.id}>
         <h1>{beach.name}</h1>
         <img src={beach.image} alt={beach.name} />
         <p>{beach.description}</p>
@@ -38,14 +36,13 @@ function Beaches() {
   }
 
   return (
-    <div>
+    <div className="beaches-page">
       <NavBar />
       <Outlet />
-      <SearchDestination onSearch={filterBeaches} />
-      <Link to="/add-service">
-        <button>Add Beach</button>
-      </Link>
-      {BeachesToRender}
+      <div className="search-bar">
+        <SearchDestination onSearch={filterBeaches} />
+      </div>
+      <div className="beaches-list">{BeachesToRender}</div>
     </div>
   );
 }

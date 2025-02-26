@@ -1,5 +1,16 @@
 import NavBar from "./NavBar"
 import { Outlet } from "react-router-dom"
+const fetchProtectedData = async () => {
+  const token = localStorage.getItem('access_token');
+  const response = await fetch('http://localhost:5555/home', {
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+      },
+  });
+
+  // Handle the response as needed
+};
 
 
 function Home() {

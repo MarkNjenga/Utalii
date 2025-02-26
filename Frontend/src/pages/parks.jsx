@@ -9,15 +9,11 @@ function Parks() {
 
   useEffect(() => {
     const fetchParks = async () => {
-      const response = await fetch(
-        "http://127.0.0.1:5000/parks"
-      );
+      const response = await fetch("http://127.0.0.1:5000/parks");
       const data = await response.json();
       setParks(data);
-      // Initializes the bufferParks state with the parks data
       setBufferParks(data);
     };
-
     fetchParks();
   }, []);
 
@@ -25,13 +21,12 @@ function Parks() {
     const filteredParks = parks.filter((park) =>
       park.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // Updates Park based on the filter setting
     setBufferParks(filteredParks);
   }
 
   const parksToRender = bufferParks.map((park) => {
     return (
-      <div key={park.id}>
+      <div className="park" key={park.id}>
         <h2>{park.name}</h2>
         <img src={park.image} alt={park.name} />
         <h3>{park.location}</h3>
@@ -41,14 +36,13 @@ function Parks() {
   });
 
   return (
-    <div>
+    <div className="parks-page">
       <NavBar />
       <Outlet />
-      <SearchDestination parks={parks} onSearch={filterParks} />
-      <Link to="/add-service">
-        <button>Add Park</button>
-      </Link>
-      <div>{parksToRender}</div>
+      <div className="search-bar">
+        <SearchDestination parks={parks} onSearch={filterParks} />
+      </div>
+      <div className="parks-list">{parksToRender}</div>
     </div>
   );
 }

@@ -54,6 +54,30 @@ def seed_data():
         rating=4,
         address="Yellowstone, WY"
     )
+    park3 = Park(
+        name="Kruger National Park",
+        image="https://tinyurl.com/5c3mr6t8",
+        description="Experience the thrill of African wildlife in Kruger.",
+        location="South Africa",
+        rating=5,
+        address="Kruger, SA"
+    )
+    park4 = Park(
+        name="Zion National Park",
+        image="https://tinyurl.com/9xv65mxk",
+        description="Discover the natural beauty of Zion.",
+        location="USA",
+        rating=4,
+        address="Zion, UT"
+    )
+    park5 = Park(
+        name="Yosemite National Park",
+        image="https://tinyurl.com/3xdtsvan",
+        description="Marvel at the stunning landscapes of Yosemite.",
+        location="USA",
+        rating=5,
+        address="Yosemite, CA"
+    )
 
     # Add Hotels
     hotel1 = Hotel(
@@ -76,6 +100,27 @@ def seed_data():
         price_range=250,
         user_id=user2.id
     )
+    hotel3 = Hotel(
+        name="Mountain Chalet",
+        image="https://tinyurl.com/ywnpefxy",
+        description="A cozy chalet in the mountains.",
+        location="Mount Kenya",
+        rating=4,
+        address="Mount Kenya, Kenya",
+        price_range=200,
+        user_id=user2.id
+        )
+    
+    hotel4 = Hotel(
+        name="Mercure hotel",
+        image="https://tinyurl.com/y3w57nn4",
+        description="A lodge with stunning views of the Grand Canyon.",
+        location="Grand Canyon",
+        rating=5,
+        address="Grand Canyon, AZ",
+        price_range=400,
+        user_id=user2.id
+        )
 
     # Add Beaches
     beach1 = Beach(
@@ -88,12 +133,29 @@ def seed_data():
     )
     beach2 = Beach(
         name="Bondi Beach",
-        image="https://tinyurl.com/bdc64ecv",
+        image="https://tinyurl.com/4yptem6k",
         description="Australia’s iconic beach destination.",
         location="Australia",
         rating=4,
         address="Bondi, NSW"
     )
+    beach3 = Beach(
+        name="Waikiki Beach",
+        image="https://tinyurl.com/ydhdteyy",
+        description="A world-famous beach in Honolulu, Hawaii.",
+        location="Hawaii",
+        rating=5,
+        address="Waikiki, HI"
+    )
+    beach4 = Beach(
+        name="Cancun Beach",
+        image="https://tinyurl.com/56shkvd4",
+        description="A tropical paradise in Mexico.",
+        location="Mexico",
+        rating=4,
+        address="Cancun, Mexico"
+    )
+    
 
     # Add Favorites
     favorite1 = Favorite(name="Wildlife Experiences")
@@ -105,7 +167,7 @@ def seed_data():
     favorite2.hotels.append(hotel2)
 
     # Commit the objects to the session
-    db.session.add_all([user1, user2, service1, service2, park1, park2, hotel1, hotel2, beach1, beach2, favorite1, favorite2])
+    db.session.add_all([user1, user2, service1, service2, park1, park2, park3, park4, park5, hotel1, hotel2, hotel3, hotel4, beach1, beach2, beach3, beach4, favorite1, favorite2])
     db.session.commit()
 
 # Ensure the app context is set up for database operations
