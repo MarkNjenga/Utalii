@@ -11,7 +11,7 @@ const Signup = () => {
     phone_number: '',
     password: '',
   });
-  const [error, setError] = useState(null);
+  
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const Signup = () => {
   
     try {
       // Make API call to signup endpoint
-      const response = await fetch('http://127.0.0.1:5000/signup', {
+      const response = await fetch('https://kenya-tours.onrender.com/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

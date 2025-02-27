@@ -7,7 +7,7 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5555/logout', {
+      const response = await fetch('https://kenya-tours.onrender.com/logout', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

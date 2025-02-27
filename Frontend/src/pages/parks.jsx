@@ -9,7 +9,7 @@ function Parks() {
 
   useEffect(() => {
     const fetchParks = async () => {
-      const response = await fetch("http://127.0.0.1:5000/parks");
+      const response = await fetch("https://kenya-tours.onrender.com/parks");
       const data = await response.json();
       setParks(data);
       setBufferParks(data);

@@ -9,7 +9,7 @@ function Beaches() {
 
   useEffect(() => {
     const fetchBeaches = async () => {
-      const response = await fetch("http://127.0.0.1:5000/beaches");
+      const response = await fetch("https://kenya-tours.onrender.com/beaches");
       const data = await response.json();
       setBufferBeaches(data);
       setBeaches(data);

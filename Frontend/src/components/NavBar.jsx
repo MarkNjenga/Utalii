@@ -6,7 +6,7 @@ import "./navbar.css";
 const Navbar = () => {
   return (
     <nav className="nav-bar">
-      <NavLink to="/" exact>
+      <NavLink to="/" >
         <IoHome size={24} />
         <span>Home</span>
       </NavLink>

@@ -6,7 +6,7 @@ import Parks from "./pages/Parks";
 import Beaches from "./pages/Beaches";
 import Navbar from "./components/NavBar";
 import AddServicePage from "./components/AddServicePage";
-import Login from './Login'; // Ensure this path is correct
+import Login from './components/login'; // Ensure this path is correct
 import Logout from './Logout'; // Ensure this path is correct
 
 
@@ -22,7 +22,7 @@ const App = () => {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        <Route path="/login" element={<Login  />} />
         <Route path="/logout" element={<Logout setIsAuth={setIsAuth} />} />
         <Route path="/hotels" element={<Hotels />} />
         <Route path="/parks" element={<Parks />} />

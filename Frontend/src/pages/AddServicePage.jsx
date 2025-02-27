@@ -15,7 +15,7 @@ const AddServicePage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://127.0.0.1:5000/services", {
+      const response = await axios.get("https://kenya-tours.onrender.com/services", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setServices(response.data.services || []);

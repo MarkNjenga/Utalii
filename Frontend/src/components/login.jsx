@@ -16,7 +16,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/login', {
+      const response = await fetch('https://kenya-tours.onrender.com/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,17 +38,11 @@ const Login = () => {
       setError('Something went wrong. Please try again later.');
     } finally {
       setLoading(false);
-    // Simple login logic
-    if (email === 'brenda@example.com' && password === 'hey123') {
-      localStorage.setItem('auth', 'true');
-      navigate('/'); // Use navigate to redirect to home page
-    } else {
-      alert('Incorrect email or password');
     }
   };
 
   return (
-    <div className="auth-form" className="login-container">
+    <div className="auth-form">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
